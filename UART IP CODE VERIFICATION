@@ -1,0 +1,50 @@
+#######################   UART IP VERIFICATION TESTBENCH CODE #######################
+timescale 1ns/1ps
+module UART_TB();
+  reg r_Clock = 0;
+  reg r_TX_DV = 0;
+  reg [7:0] r_TX_Byte = 0;
+  wire w_TX_Serial, w_TX_Done;
+
+  // Instantiate Transmitter
+  UART_TX #(.CLKS_PER_BIT(10)) dut (
+    .i_Clock(r_Clock), .i_TX_DV(r_TX_DV), .i_TX_Byte(r_TX_Byte),
+    .o_TX_Active(), .o_TX_Serial(w_TX_Serial), .o_TX_Done(w_TX_Done)
+  );
+
+  always #5 r_Clock = ~r_Clock; // 100MHz clock
+
+  initial begin
+    $dumpfile("dump.vcd"); $dumpvars(0, UART_TB);
+    #20;
+    r_TX_DV <= 1; r_TX_Byte <= 8'hAB; // Send 10101011
+    #10; r_TX_DV <= 0;
+    wait(w_TX_Done);
+    #100; $finish;
+  end
+endmodule
+######################### UART DESIGN CODE #######################################
+timescale 1ns/1ps
+module UART_TB();
+  reg r_Clock = 0;
+  reg r_TX_DV = 0;
+  reg [7:0] r_TX_Byte = 0;
+  wire w_TX_Serial, w_TX_Done;
+
+  // Instantiate Transmitter
+  UART_TX #(.CLKS_PER_BIT(10)) dut (
+    .i_Clock(r_Clock), .i_TX_DV(r_TX_DV), .i_TX_Byte(r_TX_Byte),
+    .o_TX_Active(), .o_TX_Serial(w_TX_Serial), .o_TX_Done(w_TX_Done)
+  );
+
+  always #5 r_Clock = ~r_Clock; // 100MHz clock
+
+  initial begin
+    $dumpfile("dump.vcd"); $dumpvars(0, UART_TB);
+    #20;
+    r_TX_DV <= 1; r_TX_Byte <= 8'hAB; // Send 10101011
+    #10; r_TX_DV <= 0;
+    wait(w_TX_Done);
+    #100; $finish;
+  end
+endmodule
